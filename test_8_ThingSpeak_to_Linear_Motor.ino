@@ -1,3 +1,5 @@
+/*Include two channels & API Keys*/
+/*Update to include both sensor and motor configurations*/
 
 /*for wifi & ThingSpeak connection*/
 #include "ThingSpeak.h"
@@ -11,35 +13,16 @@ char pass[] = SECRET_PASS;   // your network password
 //int keyIndex = 0;            // your network key index number (needed only for WEP)
 WiFiClient  client;
 
-
 /*for Time Counting to exchange Sensor data*/
-unsigned long startMillis;           //Reset every 15 seconds
+unsigned long startMillis;           //Reset every 5 seconds
 unsigned long currentMillis;          //Reset every loop for Time Counting
-const unsigned long period = 15000;  //Upload the data every 15 seconds
+const unsigned long period = 5000;  //Upload the data every 5 seconds
 
 /*for collecting and processing data*/
-unsigned int RTimesPressed = 0;                //data to read from Windchime and upload to ThingSpeak - how many time my Windchime hit in 15 seconds
-unsigned int WTimesPressed = 0;                //data to read from ThingSpeak and play out on Speaker - how many time the other Windchime hit in 15 seconds
+unsigned int RTimesPressed = 0;                //data to read from Sensor and upload to ThingSpeak - how many time my Windchime hit in 5 seconds
+unsigned int WTimesPressed = 0;                //data to read from ThingSpeak and play on Motor - how many time the other Windchime hit in 5 seconds
 unsigned long PlaystartMillis = 0;           //Reset every play periord
 unsigned long Playperiod = 0;       //A value to decide how often to play windchime sound for each 15 seconds period
-
-/*speaker*/
-#include <SoftwareSerial.h>
-#define CMD_PLAY_NEXT 0x01
-#define CMD_PLAY_PREV 0x02
-#define CMD_PLAY_W_INDEX 0x03
-#define CMD_SET_VOLUME 0x06
-#define CMD_SEL_DEV 0x09
-#define CMD_PLAY_W_VOL 0x22
-#define CMD_PLAY 0x0D
-#define CMD_PAUSE 0x0E
-#define CMD_SINGLE_CYCLE 0x19
-#define DEV_TF 0x02
-#define SINGLE_CYCLE_ON 0x00
-#define SINGLE_CYCLE_OFF 0x01
-#define ESP8266_RX D5  // The ESP8266 pin connected to the TX of the Serial MP3 Player module
-#define ESP8266_TX D6  // The ESP8266 pin connected to the RX of the Serial MP3 Player module
-SoftwareSerial mp3(ESP8266_RX, ESP8266_TX);
 
 void setup() {
   Serial.begin(115200);
@@ -48,11 +31,6 @@ void setup() {
   pinMode(BUILTIN_LED, OUTPUT);
   pinMode(D1, OUTPUT);
     //digitalWrite(BUILTIN_LED, HIGH); 
-
-    /*speaker*/
-      mp3.begin(9600);
-  delay(500);  // wait chip initialization is complete
-  mp3_command(CMD_SEL_DEV, DEV_TF);  // select the TF card
 }
 
 void loop() {    
@@ -98,19 +76,4 @@ currentMillis = millis(); // update time
       Serial.println(PlaystartMillis);
   }
 
-}
-
-void mp3_command(int8_t command, int16_t dat) {
-  int8_t frame[8] = { 0 };
-  frame[0] = 0x7e;                // starting byte
-  frame[1] = 0xff;                // version
-  frame[2] = 0x06;                // The number of bytes of the command without starting byte and ending byte
-  frame[3] = command;             //
-  frame[4] = 0x00;                // 0x00 = no feedback, 0x01 = feedback
-  frame[5] = (int8_t)(dat >> 8);  // data high byte
-  frame[6] = (int8_t)(dat);       // data low byte
-  frame[7] = 0xef;                // ending byte
-  for (uint8_t i = 0; i < 8; i++) {
-    mp3.write(frame[i]);
-  }
 }
