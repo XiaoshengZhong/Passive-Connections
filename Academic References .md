@@ -1,4 +1,8 @@
 # Passive-Connections
+https://nextnature.org/en/magazine/story/2020/six-gadgets-long-distance-relationship
+
+https://bond-touch.com/en-uk/blogs/the-other-half/beyond-long-distance-how-bond-touch-connects-loved-ones
+
 Rozendaal, M. C., Marenko, B., & Odon, W. (Eds.) (2021). Designing Smart Objects in Everyday Life Intelligences, Agencies, Ecologies. Bloomsbury . https://doi.org/10.5040/9781350160156
 
 Bartneck, C., Belpaeme, T., Eyssel, F., Kanda, T., Keijsers, M., & Sabanovic, S. (2020). Human-Robot Interaction – An Introduction. Cambridge: Cambridge University Press.
